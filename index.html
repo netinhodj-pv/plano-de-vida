@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Plano de Vida" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Plano de Vida</title>
+  <style>
+    :root{
+      --bg:#050505; --panel:#0e0e0e; --panel2:#151515; --line:#2a2a2a;
+      --text:#fff; --muted:#a1a1aa; --gold:#d7b56d; --green:#41d798;
+      --red:#ff7070; --amber:#f2c45d; --blue:#6ea8ff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:linear-gradient(180deg,#050505,#0b0b0b 45%,#050505);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    button,input,select{font:inherit}
+    .app{max-width:1080px;margin:auto;padding:18px 16px 110px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;
+      background:linear-gradient(145deg,#282828,#070707);border:1px solid #383838;color:var(--gold);
+      font-weight:900;font-size:20px;box-shadow:inset 0 0 28px rgba(215,181,109,.08)}
+    .brand h1{margin:0;font-size:22px}.tag{margin-top:3px;color:var(--muted);font-size:12px}
+    .date{font-size:12px;color:var(--muted)}
+    .panel{display:none}.panel.active{display:block}
+    .hero{border:1px solid #242424;border-radius:26px;padding:22px;background:
+      radial-gradient(circle at top right,rgba(215,181,109,.18),transparent 35%),#101010;
+      box-shadow:0 18px 48px rgba(0,0,0,.35)}
+    .hero small{color:var(--muted)} .hero h2{font-size:38px;margin:8px 0}
+    .heroline{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px}
+    .metric small{display:block;color:var(--muted);margin-bottom:8px}.metric strong{font-size:21px}
+    .section{margin-top:20px}.section h3{font-size:17px;margin:0 0 10px}
+    .list{display:flex;flex-direction:column;gap:9px}
+    .item{display:flex;justify-content:space-between;gap:14px;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:13px}
+    .item strong{font-size:14px}.meta{color:var(--muted);font-size:12px;line-height:1.4;margin-top:4px}
+    .pos{color:var(--green)}.neg{color:var(--red)}.warn{color:var(--amber)}.blue{color:var(--blue)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{border:0;border-radius:14px;padding:12px 14px;background:var(--gold);color:#111;font-weight:800;cursor:pointer}
+    .btn.dark{background:#222;color:#fff;border:1px solid #333}
+    .btn.red{background:var(--red);color:#111}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    label{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}
+    input,select{width:100%;padding:12px;border-radius:14px;border:1px solid #303030;background:#111;color:#fff}
+    dialog{border:0;border-radius:22px;background:#0c0c0c;color:#fff;width:min(92vw,540px);padding:0}
+    dialog::backdrop{background:rgba(0,0,0,.78)} .modal{padding:18px}
+    .bar{height:10px;background:#252525;border-radius:99px;overflow:hidden;margin-top:8px}.bar span{display:block;height:100%;background:var(--gold)}
+    .score{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center}
+    .scoreCircle{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;border:8px solid var(--green);font-size:30px;font-weight:900;background:#111}
+    .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;width:min(95%,1040px);
+      background:rgba(15,15,15,.96);backdrop-filter:blur(16px);border:1px solid var(--line);
+      border-radius:22px;padding:8px;display:grid;grid-template-columns:repeat(6,1fr);z-index:20}
+    .nav button{border:0;background:none;color:var(--muted);padding:10px 4px;border-radius:14px;font-size:11px}
+    .nav button.active{background:#242424;color:#fff}
+    .empty{text-align:center;color:var(--muted);padding:20px}
+    .timeline{border-left:2px solid #2b2b2b;margin-left:8px;padding-left:16px}
+    .timeline .item{position:relative}.timeline .item:before{content:"";position:absolute;left:-23px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--gold)}
+    .simResult{margin-top:12px;padding:14px;border-radius:16px;background:#131313;border:1px solid #2d2d2d}
+    @media(max-width:820px){.grid{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.nav{grid-template-columns:repeat(3,1fr);row-gap:4px}.score{grid-template-columns:1fr}.scoreCircle{margin:auto}.hero h2{font-size:32px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">PV</div>
+      <div><h1>Plano de Vida</h1><div class="tag">Organize seu presente. Construa seu futuro.</div></div>
+    </div>
+    <div class="date" id="today"></div>
+  </div>
+
+  <section id="hoje" class="panel active">
+    <div class="hero">
+      <small>Saldo disponível</small>
+      <h2 id="saldo"></h2>
+      <div class="heroline">
+        <span>Investimentos: <b id="invest"></b></span>
+        <span>Patrimônio: <b id="patrimonio"></b></span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card metric"><small>Receitas do mês</small><strong class="pos" id="receitas"></strong></div>
+      <div class="card metric"><small>Despesas do mês</small><strong class="neg" id="despesas"></strong></div>
+      <div class="card metric"><small>A receber</small><strong id="receber"></strong></div>
+      <div class="card metric"><small>Futuro comprometido</small><strong class="warn" id="comprometido"></strong></div>
+    </div>
+
+    <div class="section row">
+      <div class="card">
+        <h3>Índice de tranquilidade</h3>
+        <div class="score">
+          <div class="scoreCircle" id="scoreCircle">0</div>
+          <div>
+            <h2 id="scoreLabel" style="margin:0 0 8px"></h2>
+            <div class="meta" id="scoreText"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Meta mensal</h3>
+        <strong id="goalText"></strong>
+        <div class="bar"><span id="goalBar"></span></div>
+        <div class="meta">Receitas recebidas em agosto.</div>
+      </div>
+    </div>
+
+    <div class="section"><h3>Próximos compromissos</h3><div id="proximos" class="list"></div></div>
+    <div class="section"><h3>Últimas movimentações</h3><div id="ultimas" class="list"></div></div>
+  </section>
+
+  <section id="financeiro" class="panel">
+    <div class="top"><h2>Financeiro</h2><button class="btn" onclick="openMov()">+ Movimento</button></div>
+    <div id="movList" class="list"></div>
+  </section>
+
+  <section id="cartoes" class="panel">
+    <div class="top"><h2>Cartões</h2><button class="btn" onclick="openCard()">+ Compra</button></div>
+    <div class="grid">
+      <div class="card metric"><small>Parcelas futuras</small><strong class="warn" id="cardFuture"></strong></div>
+      <div class="card metric"><small>Parcela mensal atual</small><strong id="cardMonthly"></strong></div>
+      <div class="card metric"><small>Compras parceladas</small><strong id="cardCount"></strong></div>
+      <div class="card metric"><small>Maior compromisso</small><strong id="cardMax"></strong></div>
+    </div>
+    <div class="section"><div id="cardList" class="list"></div></div>
+  </section>
+
+  <section id="simulador" class="panel">
+    <div class="top"><h2>Simulador de compra</h2></div>
+    <div class="card">
+      <div class="row">
+        <div><label>Nome da compra</label><input id="simName" placeholder="Ex.: Notebook"></div>
+        <div><label>Valor total</label><input id="simTotal" type="number" step="0.01"></div>
+      </div>
+      <div class="row">
+        <div><label>Parcelas</label><input id="simParts" type="number" value="10" min="1"></div>
+        <div><label>Primeira parcela</label><input id="simStart" type="month"></div>
+      </div>
+      <div class="actions" style="margin-top:14px"><button class="btn" onclick="simulate()">Simular impacto</button></div>
+      <div id="simResult" class="simResult" style="display:none"></div>
+    </div>
+  </section>
+
+  <section id="eventos" class="panel">
+    <div class="top"><h2>Eventos</h2><button class="btn" onclick="openEvent()">+ Evento</button></div>
+    <div id="eventList" class="list"></div>
+  </section>
+
+  <section id="planejamento" class="panel">
+    <div class="top"><h2>Planejamento</h2><button class="btn" onclick="openBill()">+ Conta</button></div>
+    <div class="section"><h3>Contas a pagar</h3><div id="billList" class="list"></div></div>
+    <div class="section"><h3>Linha do tempo financeira</h3><div id="timeline" class="timeline list"></div></div>
+    <div class="section">
+      <div class="card">
+        <h3>Backup</h3>
+        <div class="actions">
+          <button class="btn dark" onclick="exportData()">Exportar dados</button>
+          <label class="btn dark" style="margin:0;display:inline-block">Importar dados<input id="importFile" type="file" hidden accept=".json"></label>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<nav class="nav">
+  <button class="active" data-tab="hoje">Hoje</button>
+  <button data-tab="financeiro">Financeiro</button>
+  <button data-tab="cartoes">Cartões</button>
+  <button data-tab="simulador">Simulador</button>
+  <button data-tab="eventos">Eventos</button>
+  <button data-tab="planejamento">Planejamento</button>
+</nav>
+
+<dialog id="movDlg"><div class="modal">
+  <h3>Nova movimentação</h3>
+  <div class="row">
+    <div><label>Tipo</label><select id="mType"><option>Despesa</option><option>Receita</option></select></div>
+    <div><label>Data</label><input id="mDate" type="date"></div>
+  </div>
+  <label>Categoria</label><input id="mCat" placeholder="Combustível, alimentação, salário...">
+  <label>Descrição</label><input id="mDesc">
+  <label>Valor</label><input id="mValue" type="number" step="0.01">
+  <div class="actions" style="margin-top:14px"><button class="btn dark" onclick="movDlg.close()">Cancelar</button><button class="btn" onclick="saveMov()">Salvar</button></div>
+</div></dialog>
+
+<dialog id="cardDlg"><div class="modal">
+  <h3>Nova compra no cartão</h3>
+  <label>Cartão</label><input id="cName" placeholder="Itaú, Porto...">
+  <label>Compra</label><input id="cDesc">
+  <div class="row">
+    <div><label>Valor total</label><input id="cTotal" type="number" step="0.01"></div>
+    <div><label>Parcelas</label><input id="cParts" type="number" value="1" min="1"></div>
+  </div>
+  <label>Parcela atual</label><input id="cCurrent" type="number" value="1" min="1">
+  <div class="actions" style="margin-top:14px"><button class="btn dark" onclick="cardDlg.close()">Cancelar</button><button class="btn" onclick="saveCard()">Salvar</button></div>
+</div></dialog>
+
+<dialog id="eventDlg"><div class="modal">
+  <h3>Novo evento</h3>
+  <div class="row">
+    <div><label>Data</label><input id="eDate" type="date"></div>
+    <div><label>Hora</label><input id="eTime" type="time"></div>
+  </div>
+  <label>Evento</label><input id="eName">
+  <label>Cliente</label><input id="eClient">
+  <label>Local</label><input id="ePlace">
+  <div class="row">
+    <div><label>Valor contratado</label><input id="eValue" type="number" step="0.01"></div>
+    <div><label>Valor recebido</label><input id="ePaid" type="number" step="0.01" value="0"></div>
+  </div>
+  <div class="actions" style="margin-top:14px"><button class="btn dark" onclick="eventDlg.close()">Cancelar</button><button class="btn" onclick="saveEvent()">Salvar</button></div>
+</div></dialog>
+
+<dialog id="billDlg"><div class="modal">
+  <h3>Nova conta</h3>
+  <label>Conta</label><input id="bName">
+  <div class="row">
+    <div><label>Vencimento</label><input id="bDate" type="date"></div>
+    <div><label>Valor</label><input id="bValue" type="number" step="0.01"></div>
+  </div>
+  <div class="actions" style="margin-top:14px"><button class="btn dark" onclick="billDlg.close()">Cancelar</button><button class="btn" onclick="saveBill()">Salvar</button></div>
+</div></dialog>
+
+<script>
+const KEY='planoDeVidaV2';
+const seed={
+  config:{saldoInicial:2277.21,investimentos:13627.38,metaMensal:6000},
+  mov:[
+    {id:1,data:'2026-08-01',tipo:'Despesa',cat:'Combustível',desc:'Combustível',valor:30},
+    {id:2,data:'2026-08-01',tipo:'Despesa',cat:'Pedágio',desc:'Pedágio',valor:9.95},
+    {id:3,data:'2026-08-01',tipo:'Despesa',cat:'Alimentação',desc:'Lanche',valor:10},
+    {id:4,data:'2026-08-01',tipo:'Despesa',cat:'Pedágio',desc:'Pedágio da volta',valor:9.95},
+    {id:5,data:'2026-08-02',tipo:'Receita',cat:'DJ',desc:'Festa Peter',valor:350},
+    {id:6,data:'2026-08-02',tipo:'Receita',cat:'DJ',desc:'Condomínio Oceânico',valor:350},
+    {id:7,data:'2026-08-02',tipo:'Receita',cat:'DJ',desc:'Festa antiga recebida em agosto',valor:350}
+  ],
+  cards:[],
+  events:[
+    {id:11,data:'2026-08-01',hora:'11:00',nome:'Festa no Sítio 20',cliente:'Peter',local:'Recreio dos Bandeirantes',valor:350,recebido:350},
+    {id:12,data:'2026-08-01',hora:'19:00',nome:'Festa Junina do Condomínio Oceânico',cliente:'Condomínio Oceânico',local:'Barra da Tijuca',valor:350,recebido:350},
+    {id:13,data:'2026-08-08',hora:'',nome:'Festa do Julio',cliente:'Julio',local:'A confirmar',valor:600,recebido:500},
+    {id:14,data:'2026-08-09',hora:'12:30',nome:'Festa do Dia dos Pais',cliente:'Peter',local:'Clube Adolf Block',valor:350,recebido:0}
+  ],
+  bills:[{id:21,nome:'Luz',data:'2026-08-13',valor:625.18,pago:false}]
+};
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||seed;
+const brl=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fd=d=>new Date(d+'T12:00:00').toLocaleDateString('pt-BR');
+
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function calc(){
+  const r=db.mov.filter(x=>x.tipo==='Receita').reduce((s,x)=>s+x.valor,0);
+  const d=db.mov.filter(x=>x.tipo==='Despesa').reduce((s,x)=>s+x.valor,0);
+  const rec=db.events.reduce((s,x)=>s+Math.max(0,x.valor-x.recebido),0);
+  const fut=db.cards.reduce((s,x)=>s+(x.total/x.partes)*Math.max(0,x.partes-x.atual+1),0);
+  const monthly=db.cards.reduce((s,x)=>s+(x.total/x.partes),0);
+  const saldo=db.config.saldoInicial+r-d;
+  const contas=db.bills.filter(x=>!x.pago).reduce((s,x)=>s+x.valor,0);
+  const score=Math.max(0,Math.min(100,Math.round(
+    65 + Math.min(20,db.config.investimentos/1000) + Math.min(10,rec/100)
+    - Math.min(30,contas/100) - Math.min(30,fut/500)
+  )));
+  return {r,d,rec,fut,monthly,saldo,pat:saldo+db.config.investimentos,contas,score}
+}
+function render(){
+  const t=calc();
+  saldo.textContent=brl(t.saldo);invest.textContent=brl(db.config.investimentos);patrimonio.textContent=brl(t.pat);
+  receitas.textContent=brl(t.r);despesas.textContent=brl(t.d);receber.textContent=brl(t.rec);comprometido.textContent=brl(t.fut);
+  scoreCircle.textContent=t.score;
+  scoreCircle.style.borderColor=t.score>=75?'var(--green)':t.score>=50?'var(--amber)':'var(--red)';
+  scoreLabel.textContent=t.score>=75?'Situação confortável':t.score>=50?'Atenção':'Situação apertada';
+  scoreText.textContent=`Considerando saldo, investimentos, contas a pagar, valores a receber e parcelas futuras.`;
+  goalText.textContent=`${brl(t.r)} de ${brl(db.config.metaMensal)}`;
+  goalBar.style.width=Math.min(100,t.r/db.config.metaMensal*100)+'%';
+
+  const mov=[...db.mov].sort((a,b)=>b.data.localeCompare(a.data)||b.id-a.id);
+  ultimas.innerHTML=mov.slice(0,5).map(m=>movItem(m)).join('')||'<div class="empty">Nenhuma movimentação.</div>';
+  movList.innerHTML=mov.map(m=>movItem(m,true)).join('')||'<div class="empty">Nenhuma movimentação.</div>';
+
+  const events=[...db.events].sort((a,b)=>a.data.localeCompare(b.data));
+  eventList.innerHTML=events.map(e=>eventItem(e,true)).join('')||'<div class="empty">Nenhum evento.</div>';
+
+  cardFuture.textContent=brl(t.fut);cardMonthly.textContent=brl(t.monthly);cardCount.textContent=db.cards.length;
+  cardMax.textContent=db.cards.length?brl(Math.max(...db.cards.map(c=>(c.total/c.partes)*Math.max(0,c.partes-c.atual+1)))):brl(0);
+  cardList.innerHTML=db.cards.map(c=>cardItem(c,true)).join('')||'<div class="empty">Nenhuma compra parcelada.</div>';
+
+  billList.innerHTML=db.bills.map(b=>billItem(b,true)).join('')||'<div class="empty">Nenhuma conta.</div>';
+
+  const prox=[
+    ...events.filter(e=>e.data>='2026-08-04').map(e=>({tipo:'Evento',data:e.data,nome:e.nome,valor:Math.max(0,e.valor-e.recebido)})),
+    ...db.bills.filter(b=>!b.pago).map(b=>({tipo:'Conta',data:b.data,nome:b.nome,valor:b.valor}))
+  ].sort((a,b)=>a.data.localeCompare(b.data)).slice(0,5);
+  proximos.innerHTML=prox.map(x=>`<div class="item"><div><strong>${x.nome}</strong><div class="meta">${x.tipo} · ${fd(x.data)}</div></div><strong class="${x.tipo==='Conta'?'warn':''}">${brl(x.valor)}</strong></div>`).join('')||'<div class="empty">Nada próximo.</div>';
+
+  const timelineItems=[
+    ...db.bills.map(b=>({data:b.data,label:b.nome,valor:-b.valor,type:'Conta'})),
+    ...events.filter(e=>Math.max(0,e.valor-e.recebido)>0).map(e=>({data:e.data,label:'Receber '+e.cliente,valor:Math.max(0,e.valor-e.recebido),type:'Recebimento'}))
+  ].sort((a,b)=>a.data.localeCompare(b.data));
+  timeline.innerHTML=timelineItems.map(x=>`<div class="item"><div><strong>${x.label}</strong><div class="meta">${fd(x.data)} · ${x.type}</div></div><strong class="${x.valor>=0?'pos':'neg'}">${x.valor>=0?'+ ':'- '}${brl(Math.abs(x.valor))}</strong></div>`).join('')||'<div class="empty">Sem itens.</div>';
+}
+function movItem(m,del=false){return `<div class="item"><div><strong>${m.desc}</strong><div class="meta">${fd(m.data)} · ${m.cat}</div></div><div style="text-align:right"><strong class="${m.tipo==='Receita'?'pos':'neg'}">${m.tipo==='Receita'?'+':'-'} ${brl(m.valor)}</strong>${del?`<div><button onclick="del('mov',${m.id})" style="background:none;border:0;color:#777">excluir</button></div>`:''}</div></div>`}
+function eventItem(e,del=false){const p=Math.max(0,e.valor-e.recebido);return `<div class="item"><div><strong>${e.nome}</strong><div class="meta">${fd(e.data)} ${e.hora?'· '+e.hora:''} · ${e.cliente}<br>${e.local}</div></div><div style="text-align:right"><strong>${p?brl(p)+' pendente':'Pago'}</strong>${del?`<div><button onclick="del('events',${e.id})" style="background:none;border:0;color:#777">excluir</button></div>`:''}</div></div>`}
+function cardItem(c,del=false){const p=c.total/c.partes,r=Math.max(0,c.partes-c.atual+1);return `<div class="item"><div><strong>${c.desc}</strong><div class="meta">${c.cartao} · parcela ${c.atual}/${c.partes} · ${brl(p)}/mês</div></div><div style="text-align:right"><strong class="warn">${brl(p*r)} restante</strong>${del?`<div><button onclick="del('cards',${c.id})" style="background:none;border:0;color:#777">excluir</button></div>`:''}</div></div>`}
+function billItem(b,del=false){return `<div class="item"><div><strong>${b.nome}</strong><div class="meta">Vence em ${fd(b.data)}</div></div><div style="text-align:right"><strong class="${b.pago?'pos':'warn'}">${brl(b.valor)}</strong>${del?`<div><button onclick="toggleBill(${b.id})" style="background:none;border:0;color:#999">${b.pago?'reabrir':'marcar paga'}</button></div>`:''}</div></div>`}
+function del(type,id){db[type]=db[type].filter(x=>x.id!==id);save()}
+function openMov(){mDate.value=new Date().toISOString().slice(0,10);movDlg.showModal()}
+function saveMov(){const v=Number(mValue.value);if(!v)return alert('Informe o valor');db.mov.push({id:Date.now(),data:mDate.value,tipo:mType.value,cat:mCat.value||'Outros',desc:mDesc.value||mCat.value,valor:v});movDlg.close();save()}
+function openCard(){cardDlg.showModal()}
+function saveCard(){const total=Number(cTotal.value),partes=Number(cParts.value),atual=Number(cCurrent.value);if(!total||!partes)return alert('Preencha os dados');db.cards.push({id:Date.now(),cartao:cName.value||'Cartão',desc:cDesc.value||'Compra',total,partes,atual});cardDlg.close();save()}
+function openEvent(){eDate.value=new Date().toISOString().slice(0,10);eventDlg.showModal()}
+function saveEvent(){const valor=Number(eValue.value);if(!eName.value||!valor)return alert('Informe evento e valor');db.events.push({id:Date.now(),data:eDate.value,hora:eTime.value,nome:eName.value,cliente:eClient.value,local:ePlace.value,valor,recebido:Number(ePaid.value||0)});eventDlg.close();save()}
+function openBill(){bDate.value=new Date().toISOString().slice(0,10);billDlg.showModal()}
+function saveBill(){const valor=Number(bValue.value);if(!bName.value||!valor)return alert('Informe conta e valor');db.bills.push({id:Date.now(),nome:bName.value,data:bDate.value,valor,pago:false});billDlg.close();save()}
+function toggleBill(id){const b=db.bills.find(x=>x.id===id);b.pago=!b.pago;if(b.pago){db.mov.push({id:Date.now(),data:new Date().toISOString().slice(0,10),tipo:'Despesa',cat:'Casa',desc:b.nome,valor:b.valor})}save()}
+function simulate(){
+  const name=simName.value||'Compra';const total=Number(simTotal.value);const parts=Number(simParts.value||1);
+  if(!total||!parts)return alert('Informe valor e parcelas');
+  const t=calc(),monthly=total/parts,newFuture=t.fut+total;
+  const newScore=Math.max(0,Math.min(100,Math.round(t.score-Math.min(35,total/300))));
+  simResult.style.display='block';
+  simResult.innerHTML=`<strong>${name}</strong><div class="meta" style="margin-top:8px">
+  Parcela estimada: <b>${brl(monthly)}</b> por ${parts} meses.<br>
+  Futuro comprometido passaria de <b>${brl(t.fut)}</b> para <b>${brl(newFuture)}</b>.<br>
+  Índice de tranquilidade estimado: <b>${t.score}</b> → <b>${newScore}</b>.
+  </div>`;
+}
+function exportData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='plano-de-vida-backup.json';a.click()}
+importFile.addEventListener('change',async e=>{try{db=JSON.parse(await e.target.files[0].text());save();alert('Dados importados.')}catch{alert('Arquivo inválido.')}})
+document.querySelectorAll('.nav button').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active')})
+today.textContent=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+render();
+</script>
+</body>
+</html>
