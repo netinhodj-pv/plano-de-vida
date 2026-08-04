@@ -1,0 +1,15 @@
+APAGUE DO GITHUB:
+- sw.js
+- style.css
+- script.js
+- README.txt
+- versões antigas do manifest, se houver duplicadas
+
+DEIXE SOMENTE:
+- index.html
+- manifest.webmanifest
+- .nojekyll
+- README.md
+
+Depois acesse:
+https://netinhodj-pv.github.io/plano-de-vida/?v=51

@@ -1,12 +1,29 @@
-# Plano de Vida V5
+# Plano de Vida — Pacote Novo 5.1
 
-Versão limpa, sem service worker e sem cache antigo.
+Este pacote substitui completamente a versão anterior.
 
-## Correções
-- Conta pendente não reduz saldo atual
-- Conta só vira despesa quando marcada como paga
-- Editar e excluir movimentações, eventos, contas, cartões, investimentos e metas
-- Investimentos aceitam saldo atual, aporte, rendimento e resgate
-- Metas completas
-- Assistente por texto e voz quando suportado
-- Migração de dados das versões anteriores
+## Arquivos que devem ficar no GitHub
+
+- index.html
+- manifest.webmanifest
+- .nojekyll
+- README.md
+
+## Arquivos antigos que devem ser apagados
+
+- sw.js
+- style.css
+- script.js
+- README.txt
+- qualquer outro arquivo antigo do protótipo
+
+## Como atualizar
+
+1. Apague os arquivos antigos no GitHub.
+2. Faça upload dos quatro arquivos deste pacote.
+3. Clique em Commit changes.
+4. Abra:
+   https://netinhodj-pv.github.io/plano-de-vida/?v=51
+5. No iPhone, apague o ícone antigo e adicione novamente à Tela de Início.
+
+A etiqueta “PACOTE NOVO 5.1” deve aparecer no topo do aplicativo.
