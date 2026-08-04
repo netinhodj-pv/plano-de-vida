@@ -1,290 +1,436 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071018">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Plano de Vida">
-<link rel="manifest" href="manifest.webmanifest">
-<title>Plano de Vida — Pacote Novo</title>
-<style>
-:root{
-  --bg:#071018;--panel:#0d1722;--panel2:#111e2b;--line:#203044;--text:#f7fbff;--muted:#9fb0c3;
-  --gold:#f0b72d;--green:#29d98a;--red:#ff6570;--blue:#4ca3ff;--purple:#9b6cff;--orange:#ff9d42;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:radial-gradient(circle at top right,#17263a 0,#071018 45%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.app{max-width:1180px;margin:auto;padding:18px 16px 100px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
-.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#3d2c06,#12100a);border:1px solid #7c5c13;color:var(--gold);display:grid;place-items:center;font-weight:900}
-.brand h1{margin:0;font-size:22px}.brand small{color:var(--muted)}
-.version{font-size:12px;color:var(--gold);border:1px solid #6d571f;background:#221d0d;padding:6px 9px;border-radius:999px}
-.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px}.tabs button{white-space:nowrap;border:1px solid var(--line);background:#0b1520;color:#b8c6d4;padding:9px 12px;border-radius:999px}.tabs button.active{background:var(--gold);color:#111;border-color:var(--gold);font-weight:800}
-.page{display:none}.page.active{display:block}
-.hero{display:flex;justify-content:space-between;gap:16px;align-items:center;background:linear-gradient(135deg,#111b27,#241c09);border:1px solid #765c1b;border-radius:24px;padding:20px}
-.hero small{color:var(--muted)}.hero h2{font-size:38px;margin:8px 0}.hero-meta{display:flex;gap:16px;flex-wrap:wrap;color:#cbd5e1;font-size:13px}
-.hero-icon{font-size:74px;color:var(--gold)}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}.metric{border:1px solid transparent;border-radius:18px;padding:15px;text-align:left;color:#fff;min-height:108px}.metric small{display:block;margin-bottom:10px}.metric strong{font-size:20px}.metric.green{background:linear-gradient(145deg,#006d42,#03321f);border-color:#098e59}.metric.red{background:linear-gradient(145deg,#7b111b,#33070b);border-color:#b92d36}.metric.blue{background:linear-gradient(145deg,#075ba8,#092b4d);border-color:#167ac9}.metric.orange{background:linear-gradient(145deg,#895400,#352000);border-color:#ba7700}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.card{background:linear-gradient(145deg,#0d1722,#09111a);border:1px solid var(--line);border-radius:18px;padding:16px}.card h3{margin:0 0 12px}
-.list{display:flex;flex-direction:column;gap:9px}.item{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;background:var(--panel2);border:1px solid #23364a;border-radius:14px;padding:12px}.item .meta{color:var(--muted);font-size:12px;margin-top:4px;line-height:1.4}.amount.pos{color:var(--green)}.amount.neg{color:var(--red)}.amount.warn{color:var(--gold)}
-.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-top:7px}.actions button{border:1px solid #344a62;background:#132131;color:#eaf1f8;border-radius:9px;padding:6px 8px;font-size:12px}.actions .delete{border-color:#603039;color:#ff8d95;background:#281217}
-.page-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.page-head h2{margin:0}.primary{border:0;background:linear-gradient(145deg,#f2c24f,#a87200);color:#111;font-weight:900;padding:11px 13px;border-radius:12px}.secondary{border:1px solid #344a62;background:#142131;color:#fff;padding:11px 13px;border-radius:12px}
-.score{display:flex;align-items:center;gap:15px}.score-ring{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:900;background:conic-gradient(var(--green) 0 77%,#18352a 77%);position:relative}.score-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#0b151d}.score-ring span{position:relative}
-.progress{height:9px;background:#213044;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green))}
-.goal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.goal-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px}.goal-values{display:flex;justify-content:space-between;margin:10px 0}
-.voice{text-align:center;max-width:680px;margin:30px auto}.voice-button{width:90px;height:90px;border-radius:50%;border:1px solid #7646b4;background:#31184f;color:#fff;font-size:32px}.voice input{width:100%;margin-top:14px;background:#111e2b;border:1px solid #2c4258;color:#fff;border-radius:12px;padding:12px}.voice .row{display:grid;grid-template-columns:1fr auto;gap:8px}.message{margin-top:12px;min-height:22px}
-dialog{border:0;border-radius:20px;background:#0b151f;color:#fff;width:min(92vw,540px);padding:0}dialog::backdrop{background:rgba(0,0,0,.8)}.modal{padding:18px;max-height:84vh;overflow:auto}.modal h3{margin-top:0}.modal label{display:block;font-size:12px;font-weight:800;margin:12px 0 6px}.modal input,.modal select{width:100%;background:#111e2b;border:1px solid #2b4258;color:#fff;border-radius:12px;padding:11px}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-@media(max-width:820px){.metrics{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.hero-icon{display:none}.hero h2{font-size:32px}.goal-grid{grid-template-columns:1fr}}
-@media(max-width:520px){.app{padding-left:10px;padding-right:10px}.metrics{grid-template-columns:1fr}.metric{min-height:86px}.item{flex-direction:column}.actions{justify-content:flex-start}.two{grid-template-columns:1fr}.voice .row{grid-template-columns:1fr}.top{align-items:flex-start}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08070a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Plano de Vida" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png" />
+  <link rel="apple-touch-icon" sizes="167x167" href="icon-167.png" />
+  <link rel="icon" href="icon-32.png" sizes="32x32" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Plano de Vida</title>
 </head>
 <body>
-<div class="app">
-  <div class="top">
-    <div class="brand"><div class="logo">PV</div><div><h1>Plano de Vida</h1><small>Organize seu presente. Construa seu futuro.</small></div></div>
-    <span class="version">PACOTE NOVO 5.1</span>
+  <svg style="display:none" aria-hidden="true">
+    <symbol id="ic-logo" viewBox="0 0 64 64">
+      <circle cx="44" cy="16" r="8" fill="currentColor"/>
+      <path d="M4 46 L22 20 L30 32 L38 16 L60 46 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M14 46 C22 38, 30 40, 36 32 C42 24, 48 26, 56 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+    </symbol>
+    <symbol id="ic-home" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h5v-5h2v5h5v-9"/></symbol>
+    <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></symbol>
+    <symbol id="ic-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M3.5 10h17"/><path d="M8 3v4"/><path d="M16 3v4"/></symbol>
+    <symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></symbol>
+    <symbol id="ic-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5 10v9M10 10v9M14 10v9M19 10v9"/><path d="M3 21h18"/></symbol>
+    <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></symbol>
+    <symbol id="ic-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="ic-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 5.2A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a15.4 15.4 0 0 1-3.4 4.3M6.6 6.6C4 8.3 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 3.9-.8"/><path d="M9.5 9.8a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="ic-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2Z"/></symbol>
+    <symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
+  </svg>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><svg><use href="#ic-logo"/></svg></div>
+        <div>
+          <h1>Plano de <span>Vida</span></h1>
+          <small>ORGANIZE · PLANEJE · CONQUISTE</small>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="active" data-tab="inicio"><svg class="nav-icon"><use href="#ic-home"/></svg><span>Início</span></button>
+        <button data-tab="financeiro"><svg class="nav-icon"><use href="#ic-chart"/></svg><span>Financeiro</span></button>
+        <button data-tab="eventos"><svg class="nav-icon"><use href="#ic-calendar"/></svg><span>Eventos</span></button>
+        <button data-tab="metas"><svg class="nav-icon"><use href="#ic-target"/></svg><span>Metas</span></button>
+        <button data-tab="investimentos"><svg class="nav-icon"><use href="#ic-bank"/></svg><span>Investimentos</span></button>
+        <button data-tab="assistente"><svg class="nav-icon"><use href="#ic-mic"/></svg><span>Assistente (IA)</span></button>
+        <button data-tab="mais"><svg class="nav-icon"><use href="#ic-dots"/></svg><span>Mais</span></button>
+      </nav>
+
+      <div class="focus-card">
+        <strong>★ Foco e disciplina</strong>
+        <p>Pequenas escolhas de hoje, grandes conquistas amanhã.</p>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="mobile-brand">
+        <div class="brand-mark"><svg><use href="#ic-logo"/></svg></div>
+        <strong>Plano de <span>Vida</span></strong>
+        <div class="mobile-brand-actions">
+          <button onclick="alert('Nenhuma notificação nova.')" title="Notificações"><svg class="icon-svg"><use href="#ic-bell"/></svg></button>
+          <button onclick="alert('Configurações chegam em breve.')" title="Configurações"><svg class="icon-svg"><use href="#ic-settings"/></svg></button>
+        </div>
+      </div>
+      <section id="inicio" class="page active">
+        <header class="topbar">
+          <div>
+            <h2 id="greeting">Boa tarde, Neto! 👋</h2>
+            <p>Vamos juntos construir uma vida ainda melhor.</p>
+          </div>
+          <div class="top-actions">
+            <button onclick="alert('Nenhuma notificação nova.')" title="Notificações"><svg class="icon-svg"><use href="#ic-bell"/></svg></button>
+            <button onclick="alert('Configurações chegam em breve.')" title="Configurações"><svg class="icon-svg"><use href="#ic-settings"/></svg></button>
+          </div>
+        </header>
+
+        <div class="dashboard-grid">
+          <section class="hero-card">
+            <div style="flex:1">
+              <div class="hero-label">
+                <small>Saldo em conta</small>
+                <button class="eye-toggle" id="eyeToggle" onclick="toggleBalance()" title="Mostrar/ocultar saldo"><svg class="icon-svg" id="eyeIcon"><use href="#ic-eye"/></svg></button>
+              </div>
+              <h3 id="saldo">R$ 0,00</h3>
+            </div>
+          </section>
+
+          <div class="stat-row">
+            <div class="stat-card">
+              <div class="stat-head"><span>Investimentos</span><svg class="icon-svg" style="color:var(--green)"><use href="#ic-chart"/></svg></div>
+              <strong id="investimentos">R$ 0,00</strong>
+            </div>
+            <div class="stat-card">
+              <div class="stat-head"><span>Patrimônio</span><svg class="icon-svg" style="color:var(--gold)"><use href="#ic-home"/></svg></div>
+              <strong id="patrimonio">R$ 0,00</strong>
+            </div>
+          </div>
+
+          <div class="summary-cards">
+            <button class="summary-card green" onclick="goFinance('Receita')">
+              <span class="icon"><svg class="icon-svg"><use href="#ic-chart"/></svg></span>
+              <small>Receitas</small>
+              <strong id="receitas">R$ 0,00</strong>
+              <em><svg class="icon-svg" style="width:16px;height:16px"><use href="#ic-arrow"/></svg></em>
+            </button>
+            <button class="summary-card red" onclick="goFinance('Despesa')">
+              <span class="icon"><svg class="icon-svg"><use href="#ic-chart"/></svg></span>
+              <small>Despesas</small>
+              <strong id="despesas">R$ 0,00</strong>
+              <em><svg class="icon-svg" style="width:16px;height:16px"><use href="#ic-arrow"/></svg></em>
+            </button>
+            <button class="summary-card blue" onclick="goTab('eventos')">
+              <span class="icon"><svg class="icon-svg"><use href="#ic-calendar"/></svg></span>
+              <small>A receber</small>
+              <strong id="aReceber">R$ 0,00</strong>
+              <em><svg class="icon-svg" style="width:16px;height:16px"><use href="#ic-arrow"/></svg></em>
+            </button>
+            <button class="summary-card amber" onclick="goTab('investimentos')">
+              <span class="icon"><svg class="icon-svg"><use href="#ic-bank"/></svg></span>
+              <small>Futuro comprometido</small>
+              <strong id="futuroComprometido">R$ 0,00</strong>
+              <em><svg class="icon-svg" style="width:16px;height:16px"><use href="#ic-arrow"/></svg></em>
+            </button>
+          </div>
+
+          <section class="info-card tranquility">
+            <div>
+              <h4>Índice de tranquilidade ⓘ</h4>
+              <div class="score-wrap">
+                <div class="score-ring"><span id="score">77</span></div>
+                <div>
+                  <strong id="scoreLabel">Situação confortável</strong>
+                  <p>Considerando saldo, investimentos, contas a pagar, valores a receber e parcelas futuras.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="info-card events-card">
+            <div class="section-head">
+              <h4>Próximos eventos</h4>
+              <button onclick="goTab('eventos')">Ver todos →</button>
+            </div>
+            <div id="homeEvents" class="stack"></div>
+          </section>
+
+          <section class="info-card bills-card">
+            <div class="section-head">
+              <h4>Contas a vencer ⚠</h4>
+              <button onclick="goTab('mais')">Ver todas →</button>
+            </div>
+            <div id="homeBills" class="stack"></div>
+          </section>
+
+          <section class="info-card goal-card">
+            <div class="section-head">
+              <h4>Meta do mês 🎯</h4>
+              <button onclick="goTab('metas')">Ver todas →</button>
+            </div>
+            <div class="goal-row">
+              <div class="goal-icon">◎</div>
+              <div class="goal-content">
+                <strong>Foco na meta</strong>
+                <small id="goalText">R$ 0,00 de R$ 0,00</small>
+                <div class="progress"><span id="goalBar"></span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="info-card quick-card">
+            <h4>Adicionar rápido</h4>
+            <div class="quick-actions">
+              <button class="quick redq" onclick="openMov('Despesa')"><svg class="icon-svg"><use href="#ic-arrow" transform="rotate(90 12 12)"/></svg><span>Despesa</span></button>
+              <button class="quick greenq" onclick="openMov('Receita')"><svg class="icon-svg"><use href="#ic-plus"/></svg><span>Receita</span></button>
+              <button class="quick blueq" onclick="openTransfer()"><svg class="icon-svg"><use href="#ic-arrow"/></svg><span>Transferência</span></button>
+              <button class="quick orangeq" onclick="openEvent()"><svg class="icon-svg"><use href="#ic-calendar"/></svg><span>Evento</span></button>
+              <button class="quick purpleq" onclick="goTab('assistente')"><svg class="icon-svg"><use href="#ic-mic"/></svg><span>Falar (IA)</span></button>
+            </div>
+          </section>
+
+          <section class="motivation-card">
+            <strong>🎯 Disciplina hoje, liberdade amanhã.</strong>
+            <span>Você está construindo a vida que sempre sonhou!</span>
+          </section>
+        </div>
+      </section>
+
+      <section id="financeiro" class="page">
+        <div class="page-head">
+          <div><h2>Financeiro</h2><p>Receitas e despesas em um só lugar.</p></div>
+          <button class="primary" onclick="openMov()">+ Nova movimentação</button>
+        </div>
+        <div class="filter-row">
+          <button class="filter active" data-filter="Todos" onclick="setFilter('Todos')">Todos</button>
+          <button class="filter" data-filter="Receita" onclick="setFilter('Receita')">Receitas</button>
+          <button class="filter" data-filter="Despesa" onclick="setFilter('Despesa')">Despesas</button>
+        </div>
+        <div id="financeList" class="data-list"></div>
+      </section>
+
+      <section id="eventos" class="page">
+        <div class="page-head">
+          <div><h2>Eventos</h2><p>Controle clientes, valores e pagamentos.</p></div>
+          <button class="primary" onclick="openEvent()">+ Novo evento</button>
+        </div>
+        <div id="eventList" class="data-list"></div>
+      </section>
+
+      <section id="metas" class="page">
+        <div class="page-head">
+          <div><h2>Metas</h2><p>Transforme objetivos em planos reais.</p></div>
+          <button class="primary" onclick="openGoal()">+ Nova meta</button>
+        </div>
+        <div id="goalList" class="goal-list"></div>
+      </section>
+
+      <section id="investimentos" class="page">
+        <div class="page-head">
+          <div><h2>Investimentos</h2><p>Acompanhe sua reserva, aportes e rendimentos.</p></div>
+          <button class="primary" onclick="openInvestment()">Editar investimento</button>
+        </div>
+        <div class="panel-grid">
+          <div class="panel-card editable-panel">
+            <div class="section-head">
+              <div>
+                <small>Mercado Pago — Cofrinho</small>
+                <strong id="investBig"></strong>
+              </div>
+              <button class="icon-action" onclick="openInvestment()" title="Editar investimento">✏️</button>
+            </div>
+          </div>
+          <div class="panel-card"><small>Futuro comprometido</small><strong id="futureBig"></strong></div>
+        </div>
+        <div class="panel-card investment-history-card">
+          <div class="section-head"><h3>Histórico do investimento</h3></div>
+          <div id="investmentHistory" class="stack"></div>
+        </div>
+      </section>
+
+      <section id="assistente" class="page">
+        <div class="page-head">
+          <div><h2>Assistente</h2><p>Registre receitas e despesas falando ou digitando.</p></div>
+        </div>
+
+        <div class="voice-card">
+          <div class="wave">▁▃▆▂▇▅▂▆▃▁</div>
+          <button class="voice-button" id="voiceButton" onclick="startVoice()"><svg class="icon-svg" style="width:30px;height:30px"><use href="#ic-mic"/></svg></button>
+          <strong id="voiceTitle">Toque para falar</strong>
+          <p id="voiceStatus">Exemplo: “Gastei 30 reais no mercado.”</p>
+
+          <div class="voice-input-wrap">
+            <input id="assistantText" placeholder="Digite: Recebi 350 do Peter">
+            <button class="primary" onclick="processAssistantText()">Registrar</button>
+          </div>
+
+          <div id="assistantPreview" class="assistant-preview"></div>
+        </div>
+      </section>
+
+      <section id="mais" class="page">
+        <div class="page-head"><div><h2>Mais</h2><p>Contas, cartões e configurações.</p></div></div>
+        <div class="panel-grid">
+          <div class="panel-card">
+            <div class="section-head"><h3>Contas a pagar</h3><button onclick="openBill()">+ Adicionar</button></div>
+            <div id="billList" class="stack"></div>
+          </div>
+          <div class="panel-card">
+            <div class="section-head"><h3>Cartões e parcelas</h3><button onclick="openCard()">+ Compra</button></div>
+            <div id="cardList" class="stack"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="right-panel">
+      <section class="mini-card">
+        <div class="card-title"><span class="icon-badge badge-green"><svg><use href="#ic-chart"/></svg></span><h3>Controle Financeiro</h3></div>
+        <div class="mini-line"><span>Receitas</span><strong class="pos" id="rightReceitas"></strong></div>
+        <div class="mini-line"><span>Despesas</span><strong class="neg" id="rightDespesas"></strong></div>
+        <div class="mini-line"><span>Investimentos</span><strong class="pos" id="rightInvest"></strong></div>
+        <button onclick="goTab('financeiro')">Ver relatório completo →</button>
+      </section>
+
+      <section class="mini-card">
+        <div class="section-head"><div class="card-title"><span class="icon-badge badge-amber"><svg><use href="#ic-calendar"/></svg></span><h3>Agenda Inteligente</h3></div><button onclick="goTab('eventos')">Ver todos</button></div>
+        <div id="rightEvents" class="stack"></div>
+      </section>
+
+      <section class="mini-card">
+        <div class="section-head"><div class="card-title"><span class="icon-badge badge-red"><svg><use href="#ic-target"/></svg></span><h3>Metas e Objetivos</h3></div><button onclick="goTab('metas')">Ver todas</button></div>
+        <div id="rightGoalSummary"></div>
+      </section>
+
+      <section class="mini-card">
+        <div class="section-head"><div class="card-title"><span class="icon-badge badge-purple"><svg><use href="#ic-mic"/></svg></span><h3>Assistente de Voz (IA)</h3></div><span class="badge">Novo</span></div>
+        <div class="wave small-wave">▁▃▆▂▇▅▂▆▃▁</div>
+        <blockquote>“Gastei 30 reais no mercado.”</blockquote>
+        <div class="success">✓ Registrado!</div>
+      </section>
+    </aside>
   </div>
 
-  <div class="tabs">
-    <button class="active" data-page="inicio">Início</button>
-    <button data-page="financeiro">Financeiro</button>
-    <button data-page="eventos">Eventos</button>
-    <button data-page="contas">Contas</button>
-    <button data-page="cartoes">Cartões</button>
-    <button data-page="investimentos">Investimentos</button>
-    <button data-page="metas">Metas</button>
-    <button data-page="assistente">Assistente</button>
-  </div>
+  <nav class="mobile-nav">
+    <button class="active" data-tab="inicio"><svg class="nav-icon"><use href="#ic-home"/></svg><span>Início</span></button>
+    <button data-tab="financeiro"><svg class="nav-icon"><use href="#ic-chart"/></svg><span>Financeiro</span></button>
+    <button class="plus" onclick="openMov()"><svg><use href="#ic-plus"/></svg></button>
+    <button data-tab="eventos"><svg class="nav-icon"><use href="#ic-calendar"/></svg><span>Eventos</span></button>
+    <button data-tab="metas"><svg class="nav-icon"><use href="#ic-target"/></svg><span>Metas</span></button>
+  </nav>
 
-  <section id="inicio" class="page active">
-    <div class="hero">
-      <div><small>Saldo atual em conta</small><h2 id="saldoAtual"></h2><div class="hero-meta"><span>Investimentos: <b id="investResumo"></b></span><span>Patrimônio: <b id="patrimonio"></b></span></div></div>
-      <div class="hero-icon">▰</div>
-    </div>
-    <div class="metrics">
-      <button class="metric green" onclick="openPage('financeiro','Receita')"><small>Receitas</small><strong id="receitas"></strong></button>
-      <button class="metric red" onclick="openPage('financeiro','Despesa')"><small>Despesas pagas</small><strong id="despesas"></strong></button>
-      <button class="metric blue" onclick="openPage('eventos')"><small>A receber</small><strong id="aReceber"></strong></button>
-      <button class="metric orange" onclick="openPage('contas')"><small>A pagar</small><strong id="aPagar"></strong></button>
-    </div>
-    <div class="grid2">
-      <div class="card"><h3>Saldo projetado</h3><strong id="saldoProjetado" style="font-size:28px"></strong><div class="meta">Saldo atual + valores a receber − contas pendentes.</div></div>
-      <div class="card"><h3>Índice de tranquilidade</h3><div class="score"><div class="score-ring"><span id="score">0</span></div><div><strong id="scoreLabel"></strong><p class="meta">Considera saldo, investimentos, contas pendentes e valores a receber.</p></div></div></div>
-    </div>
-    <div class="grid2">
-      <div class="card"><h3>Próximos eventos</h3><div id="homeEvents" class="list"></div></div>
-      <div class="card"><h3>Contas pendentes</h3><div id="homeBills" class="list"></div></div>
-    </div>
-  </section>
+  <dialog id="movDialog">
+    <form method="dialog" class="modal">
+      <h3>Nova movimentação</h3>
+      <div class="two-cols">
+        <div><label>Tipo</label><select id="movType"><option>Despesa</option><option>Receita</option></select></div>
+        <div><label>Data</label><input id="movDate" type="date"></div>
+      </div>
+      <label>Categoria</label><input id="movCat" placeholder="Ex.: Combustível">
+      <label>Descrição</label><input id="movDesc">
+      <label>Valor</label><input id="movValue" type="number" step="0.01">
+      <div class="modal-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" class="primary" onclick="saveMov()">Salvar</button></div>
+    </form>
+  </dialog>
 
-  <section id="financeiro" class="page">
-    <div class="page-head"><h2>Financeiro</h2><button class="primary" onclick="openMovement()">+ Movimentação</button></div>
-    <div id="financeList" class="list"></div>
-  </section>
+  <dialog id="eventDialog">
+    <form method="dialog" class="modal">
+      <h3>Novo evento</h3>
+      <div class="two-cols">
+        <div><label>Data</label><input id="eventDate" type="date"></div>
+        <div><label>Hora</label><input id="eventTime" type="time"></div>
+      </div>
+      <label>Evento</label><input id="eventName">
+      <label>Cliente</label><input id="eventClient">
+      <label>Local</label><input id="eventPlace">
+      <div class="two-cols">
+        <div><label>Valor</label><input id="eventValue" type="number" step="0.01"></div>
+        <div><label>Recebido</label><input id="eventPaid" type="number" step="0.01" value="0"></div>
+      </div>
+      <div class="modal-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" class="primary" onclick="saveEvent()">Salvar</button></div>
+    </form>
+  </dialog>
 
-  <section id="eventos" class="page">
-    <div class="page-head"><h2>Eventos</h2><button class="primary" onclick="openEvent()">+ Evento</button></div>
-    <div id="eventList" class="list"></div>
-  </section>
+  <dialog id="billDialog">
+    <form method="dialog" class="modal">
+      <h3>Nova conta</h3>
+      <label>Conta</label><input id="billName">
+      <div class="two-cols">
+        <div><label>Vencimento</label><input id="billDate" type="date"></div>
+        <div><label>Valor</label><input id="billValue" type="number" step="0.01"></div>
+      </div>
+      <div class="modal-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" class="primary" onclick="saveBill()">Salvar</button></div>
+    </form>
+  </dialog>
 
-  <section id="contas" class="page">
-    <div class="page-head"><h2>Contas a pagar</h2><button class="primary" onclick="openBill()">+ Conta</button></div>
-    <div id="billList" class="list"></div>
-  </section>
+  <dialog id="cardDialog">
+    <form method="dialog" class="modal">
+      <h3>Compra no cartão</h3>
+      <label>Cartão</label><input id="cardName" placeholder="Ex.: Itaú">
+      <label>Compra</label><input id="cardDesc">
+      <div class="two-cols">
+        <div><label>Valor total</label><input id="cardTotal" type="number" step="0.01"></div>
+        <div><label>Parcelas</label><input id="cardParts" type="number" value="1" min="1"></div>
+      </div>
+      <label>Parcela atual</label><input id="cardCurrent" type="number" value="1" min="1">
+      <div class="modal-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" class="primary" onclick="saveCard()">Salvar</button></div>
+    </form>
+  </dialog>
 
-  <section id="cartoes" class="page">
-    <div class="page-head"><h2>Cartões</h2><button class="primary" onclick="openCard()">+ Compra</button></div>
-    <div class="card" style="margin-bottom:12px"><small>Futuro comprometido</small><strong id="futureCards" style="font-size:26px"></strong></div>
-    <div id="cardList" class="list"></div>
-  </section>
 
-  <section id="investimentos" class="page">
-    <div class="page-head"><h2>Investimentos</h2><button class="primary" onclick="openInvestment()">Atualizar</button></div>
-    <div class="card"><small>Mercado Pago — Cofrinho</small><strong id="investBig" style="font-size:30px"></strong></div>
-    <div class="card" style="margin-top:12px"><h3>Histórico</h3><div id="investmentList" class="list"></div></div>
-  </section>
 
-  <section id="metas" class="page">
-    <div class="page-head"><h2>Metas</h2><button class="primary" onclick="openGoal()">+ Meta</button></div>
-    <div id="goalList" class="goal-grid"></div>
-  </section>
+  <dialog id="goalDialog">
+    <form method="dialog" class="modal">
+      <h3 id="goalDialogTitle">Nova meta</h3>
+      <label>Nome da meta</label>
+      <input id="goalName" placeholder="Ex.: Comprar câmera nova">
+      <label>Valor da meta</label>
+      <input id="goalTarget" type="number" step="0.01">
+      <label>Valor já guardado</label>
+      <input id="goalSaved" type="number" step="0.01" value="0">
+      <label>Prazo</label>
+      <input id="goalDate" type="date">
+      <label>Observação</label>
+      <input id="goalNote" placeholder="Opcional">
+      <div class="modal-actions">
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button type="button" class="primary" onclick="saveGoal()">Salvar</button>
+      </div>
+    </form>
+  </dialog>
 
-  <section id="assistente" class="page">
-    <div class="voice card">
-      <h2>Assistente</h2>
-      <p class="meta">Exemplo: “Gastei 30 reais de combustível” ou “Recebi 350 da festa”.</p>
-      <button class="voice-button" onclick="startVoice()">◉</button>
-      <div class="row"><input id="assistantText" placeholder="Digite uma movimentação"><button class="primary" onclick="processAssistant()">Registrar</button></div>
-      <div id="assistantMessage" class="message"></div>
-    </div>
-  </section>
-</div>
+  <dialog id="investmentDialog">
+    <form method="dialog" class="modal">
+      <h3>Atualizar investimento</h3>
+      <label>Tipo de atualização</label>
+      <select id="investmentType">
+        <option value="Saldo atual">Informar saldo atual</option>
+        <option value="Aporte">Aporte</option>
+        <option value="Rendimento">Rendimento</option>
+        <option value="Resgate">Resgate</option>
+      </select>
+      <label>Valor</label>
+      <input id="investmentValue" type="number" step="0.01">
+      <label>Data</label>
+      <input id="investmentDate" type="date">
+      <label>Observação</label>
+      <input id="investmentNote" placeholder="Ex.: rendimento do cofrinho">
+      <div class="modal-actions">
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button type="button" class="primary" onclick="saveInvestment()">Salvar</button>
+      </div>
+    </form>
+  </dialog>
 
-<dialog id="genericDialog"><div class="modal"><h3 id="dialogTitle"></h3><div id="dialogFields"></div><div class="modal-actions"><button class="secondary" onclick="genericDialog.close()">Cancelar</button><button class="primary" onclick="saveDialog()">Salvar</button></div></div></dialog>
+  <dialog id="editDialog">
+    <form method="dialog" class="modal">
+      <h3 id="editTitle">Editar item</h3>
+      <div id="editFields"></div>
+      <div class="modal-actions">
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button type="button" class="primary" onclick="saveEdit()">Salvar alterações</button>
+      </div>
+    </form>
+  </dialog>
 
-<script>
-const KEY='planoDeVidaV5';
-const defaultData={
-  config:{saldoInicial:2277.21,investimentos:13627.38},
-  movements:[
-    {id:1,date:'2026-08-01',type:'Despesa',category:'Combustível',description:'Combustível',value:30},
-    {id:2,date:'2026-08-01',type:'Despesa',category:'Pedágio',description:'Pedágio',value:9.95},
-    {id:3,date:'2026-08-01',type:'Despesa',category:'Alimentação',description:'Lanche',value:10},
-    {id:4,date:'2026-08-01',type:'Despesa',category:'Pedágio',description:'Pedágio da volta',value:9.95},
-    {id:5,date:'2026-08-02',type:'Receita',category:'DJ',description:'Festa Peter',value:350},
-    {id:6,date:'2026-08-02',type:'Receita',category:'DJ',description:'Condomínio Oceânico',value:350},
-    {id:7,date:'2026-08-02',type:'Receita',category:'DJ',description:'Festa antiga recebida em agosto',value:350}
-  ],
-  events:[
-    {id:11,date:'2026-08-08',time:'',name:'Festa do Julio',client:'Julio',place:'A confirmar',value:600,received:500},
-    {id:12,date:'2026-08-09',time:'12:30',name:'Festa do Dia dos Pais',client:'Peter',place:'Clube Adolf Block',value:350,received:0}
-  ],
-  bills:[{id:21,name:'Light (Luz)',due:'2026-08-13',value:625.18,paid:false}],
-  cards:[],
-  investments:[{id:31,date:'2026-08-04',type:'Saldo atual',value:13627.38,note:'Valor inicial'}],
-  goals:[{id:41,name:'Comprar novo equipamento',target:5000,saved:0,due:'2026-12-31',note:''}]
-};
-
-function migrate(){
-  const existing=localStorage.getItem(KEY);
-  if(existing) return JSON.parse(existing);
-  const oldKeys=['planoDeVidaV3','planoDeVidaV2','planoDeVidaTesteV1','planoDeVidaBetaV2'];
-  for(const k of oldKeys){
-    try{
-      const old=JSON.parse(localStorage.getItem(k)||'null');
-      if(!old) continue;
-      const data=structuredClone(defaultData);
-      if(old.config){
-        data.config.saldoInicial=Number(old.config.saldoInicial||data.config.saldoInicial);
-        data.config.investimentos=Number(old.config.investimentos||data.config.investimentos);
-      }
-      if(Array.isArray(old.mov)) data.movements=old.mov.map(x=>({id:x.id,date:x.data,type:x.tipo,category:x.cat||x.categoria||'Outros',description:x.desc||x.descricao||'Movimentação',value:Number(x.valor||0),billId:x.billId}));
-      if(Array.isArray(old.events)) data.events=old.events.map(x=>({id:x.id,date:x.data,time:x.hora||'',name:x.nome,client:x.cliente||'',place:x.local||'',value:Number(x.valor||0),received:Number(x.recebido||0)}));
-      if(Array.isArray(old.bills)) data.bills=old.bills.map(x=>({id:x.id,name:x.nome,due:x.data,value:Number(x.valor||0),paid:!!x.pago}));
-      if(Array.isArray(old.cards)) data.cards=old.cards.map(x=>({id:x.id,name:x.cartao,description:x.desc,total:Number(x.total||0),parts:Number(x.partes||1),current:Number(x.atual||1)}));
-      if(Array.isArray(old.goals)) data.goals=old.goals.map(x=>({id:x.id,name:x.nome,target:Number(x.meta||0),saved:Number(x.guardado||0),due:x.prazo||'',note:x.observacao||''}));
-      return data;
-    }catch(e){}
-  }
-  return structuredClone(defaultData);
-}
-
-let db=migrate();
-let edit={type:null,id:null};
-
-function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
-function dateBR(d){return d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR'):''}
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
-
-function totals(){
-  const revenue=db.movements.filter(x=>x.type==='Receita').reduce((s,x)=>s+x.value,0);
-  const expenses=db.movements.filter(x=>x.type==='Despesa').reduce((s,x)=>s+x.value,0);
-  const receivable=db.events.reduce((s,x)=>s+Math.max(0,x.value-x.received),0);
-  const payable=db.bills.filter(x=>!x.paid).reduce((s,x)=>s+x.value,0);
-  const current=db.config.saldoInicial+revenue-expenses;
-  const projected=current+receivable-payable;
-  const future=db.cards.reduce((s,x)=>s+(x.total/x.parts)*Math.max(0,x.parts-x.current+1),0);
-  const score=Math.max(0,Math.min(100,Math.round(78+Math.min(10,db.config.investimentos/4000)+Math.min(6,receivable/200)-Math.min(22,payable/150)-Math.min(20,future/600))));
-  return{revenue,expenses,receivable,payable,current,projected,future,score,patrimony:current+db.config.investimentos};
-}
-
-function render(){
-  const t=totals();
-  saldoAtual.textContent=money(t.current);investResumo.textContent=money(db.config.investimentos);patrimonio.textContent=money(t.patrimony);
-  receitas.textContent=money(t.revenue);despesas.textContent=money(t.expenses);aReceber.textContent=money(t.receivable);aPagar.textContent=money(t.payable);
-  saldoProjetado.textContent=money(t.projected);score.textContent=t.score;scoreLabel.textContent=t.score>=75?'Situação confortável':t.score>=50?'Atenção':'Situação apertada';
-  futureCards.textContent=money(t.future);investBig.textContent=money(db.config.investimentos);
-
-  const movements=[...db.movements].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
-  financeList.innerHTML=movements.map(x=>itemMovement(x)).join('')||'<div class="meta">Nenhuma movimentação.</div>';
-  eventList.innerHTML=[...db.events].sort((a,b)=>a.date.localeCompare(b.date)).map(x=>itemEvent(x)).join('')||'<div class="meta">Nenhum evento.</div>';
-  billList.innerHTML=db.bills.map(x=>itemBill(x)).join('')||'<div class="meta">Nenhuma conta.</div>';
-  cardList.innerHTML=db.cards.map(x=>itemCard(x)).join('')||'<div class="meta">Nenhuma compra parcelada.</div>';
-  investmentList.innerHTML=[...db.investments].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(x=>itemInvestment(x)).join('')||'<div class="meta">Nenhuma atualização.</div>';
-  goalList.innerHTML=db.goals.map(x=>itemGoal(x)).join('')||'<div class="meta">Nenhuma meta.</div>';
-  homeEvents.innerHTML=[...db.events].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3).map(x=>itemEvent(x,true)).join('')||'<div class="meta">Nenhum evento.</div>';
-  homeBills.innerHTML=db.bills.filter(x=>!x.paid).slice(0,3).map(x=>itemBill(x,true)).join('')||'<div class="meta">Nenhuma conta pendente.</div>';
-}
-
-function actionButtons(type,id,extra=''){return `<div class="actions">${extra}<button onclick="openEdit('${type}',${id})">✏️ Editar</button><button class="delete" onclick="removeItem('${type}',${id})">🗑 Excluir</button></div>`}
-function itemMovement(x){return `<div class="item"><div><strong>${x.description}</strong><div class="meta">${dateBR(x.date)} · ${x.category}</div></div><div><strong class="amount ${x.type==='Receita'?'pos':'neg'}">${x.type==='Receita'?'+':'-'} ${money(x.value)}</strong>${actionButtons('movement',x.id)}</div></div>`}
-function itemEvent(x,compact=false){const pending=Math.max(0,x.value-x.received);return `<div class="item"><div><strong>${x.name}</strong><div class="meta">${dateBR(x.date)} ${x.time?'· '+x.time:''} · ${x.client}<br>${x.place}</div></div><div><strong class="amount ${pending?'warn':'pos'}">${pending?money(pending)+' pendente':'Pago'}</strong>${compact?'':actionButtons('event',x.id)}</div></div>`}
-function itemBill(x,compact=false){const extra=compact?'':`<button onclick="toggleBill(${x.id})">${x.paid?'↩ Reabrir':'✓ Marcar paga'}</button>`;return `<div class="item"><div><strong>${x.name}</strong><div class="meta">Vence em ${dateBR(x.due)} · ${x.paid?'Paga':'Pendente'}</div></div><div><strong class="amount ${x.paid?'pos':'warn'}">${money(x.value)}</strong>${compact?'':actionButtons('bill',x.id,extra)}</div></div>`}
-function itemCard(x){const p=x.total/x.parts,rest=Math.max(0,x.parts-x.current+1);return `<div class="item"><div><strong>${x.description}</strong><div class="meta">${x.name} · ${x.current}/${x.parts} · ${money(p)}/mês</div></div><div><strong class="amount warn">${money(p*rest)} restante</strong>${actionButtons('card',x.id)}</div></div>`}
-function itemInvestment(x){const cls=x.type==='Resgate'?'neg':x.type==='Saldo atual'?'warn':'pos';const sign=x.type==='Resgate'?'-':x.type==='Saldo atual'?'':'+ ';return `<div class="item"><div><strong>${x.type}</strong><div class="meta">${dateBR(x.date)}${x.note?' · '+x.note:''}</div></div><div><strong class="amount ${cls}">${sign}${money(x.value)}</strong>${actionButtons('investment',x.id)}</div></div>`}
-function itemGoal(x){const pct=Math.max(0,Math.min(100,Math.round(x.saved/Math.max(1,x.target)*100)));return `<div class="goal-card"><h3>${x.name}</h3><div class="meta">${x.due?'Prazo: '+dateBR(x.due):'Sem prazo'}${x.note?' · '+x.note:''}</div><div class="goal-values"><span>${money(x.saved)} de ${money(x.target)}</span><b>${pct}%</b></div><div class="progress"><span style="width:${pct}%"></span></div>${actionButtons('goal',x.id)}</div>`}
-
-function openPage(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'})}
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>openPage(b.dataset.page));
-
-function fields(html){dialogFields.innerHTML=html;genericDialog.showModal()}
-function openMovement(id=null){edit={type:'movement',id};dialogTitle.textContent=id?'Editar movimentação':'Nova movimentação';const x=id?db.movements.find(y=>y.id===id):{date:new Date().toISOString().slice(0,10),type:'Despesa',category:'',description:'',value:''};fields(`<label>Tipo</label><select id="fType"><option ${x.type==='Despesa'?'selected':''}>Despesa</option><option ${x.type==='Receita'?'selected':''}>Receita</option></select><label>Data</label><input id="fDate" type="date" value="${x.date}"><label>Categoria</label><input id="fCategory" value="${x.category}"><label>Descrição</label><input id="fDescription" value="${x.description}"><label>Valor</label><input id="fValue" type="number" step="0.01" value="${x.value}">`)}
-function openEvent(id=null){edit={type:'event',id};dialogTitle.textContent=id?'Editar evento':'Novo evento';const x=id?db.events.find(y=>y.id===id):{date:new Date().toISOString().slice(0,10),time:'',name:'',client:'',place:'',value:'',received:0};fields(`<label>Data</label><input id="fDate" type="date" value="${x.date}"><label>Hora</label><input id="fTime" type="time" value="${x.time}"><label>Evento</label><input id="fName" value="${x.name}"><label>Cliente</label><input id="fClient" value="${x.client}"><label>Local</label><input id="fPlace" value="${x.place}"><label>Valor</label><input id="fValue" type="number" step="0.01" value="${x.value}"><label>Recebido</label><input id="fReceived" type="number" step="0.01" value="${x.received}">`)}
-function openBill(id=null){edit={type:'bill',id};dialogTitle.textContent=id?'Editar conta':'Nova conta';const x=id?db.bills.find(y=>y.id===id):{name:'',due:new Date().toISOString().slice(0,10),value:''};fields(`<label>Conta</label><input id="fName" value="${x.name}"><label>Vencimento</label><input id="fDue" type="date" value="${x.due}"><label>Valor</label><input id="fValue" type="number" step="0.01" value="${x.value}">`)}
-function openCard(id=null){edit={type:'card',id};dialogTitle.textContent=id?'Editar compra':'Nova compra';const x=id?db.cards.find(y=>y.id===id):{name:'',description:'',total:'',parts:1,current:1};fields(`<label>Cartão</label><input id="fName" value="${x.name}"><label>Compra</label><input id="fDescription" value="${x.description}"><label>Valor total</label><input id="fTotal" type="number" step="0.01" value="${x.total}"><label>Parcelas</label><input id="fParts" type="number" value="${x.parts}"><label>Parcela atual</label><input id="fCurrent" type="number" value="${x.current}">`)}
-function openInvestment(id=null){edit={type:'investment',id};dialogTitle.textContent=id?'Editar investimento':'Atualizar investimento';const x=id?db.investments.find(y=>y.id===id):{date:new Date().toISOString().slice(0,10),type:'Saldo atual',value:db.config.investimentos,note:''};fields(`<label>Tipo</label><select id="fInvType"><option ${x.type==='Saldo atual'?'selected':''}>Saldo atual</option><option ${x.type==='Aporte'?'selected':''}>Aporte</option><option ${x.type==='Rendimento'?'selected':''}>Rendimento</option><option ${x.type==='Resgate'?'selected':''}>Resgate</option></select><label>Data</label><input id="fDate" type="date" value="${x.date}"><label>Valor</label><input id="fValue" type="number" step="0.01" value="${x.value}"><label>Observação</label><input id="fNote" value="${x.note}">`)}
-function openGoal(id=null){edit={type:'goal',id};dialogTitle.textContent=id?'Editar meta':'Nova meta';const x=id?db.goals.find(y=>y.id===id):{name:'',target:'',saved:0,due:'',note:''};fields(`<label>Meta</label><input id="fName" value="${x.name}"><label>Valor alvo</label><input id="fTarget" type="number" step="0.01" value="${x.target}"><label>Valor guardado</label><input id="fSaved" type="number" step="0.01" value="${x.saved}"><label>Prazo</label><input id="fDue" type="date" value="${x.due}"><label>Observação</label><input id="fNote" value="${x.note}">`)}
-
-function openEdit(type,id){({movement:openMovement,event:openEvent,bill:openBill,card:openCard,investment:openInvestment,goal:openGoal}[type])(id)}
-function saveDialog(){
-  const {type,id}=edit;
-  if(type==='movement'){const x={id:id||Date.now(),date:fDate.value,type:fType.value,category:fCategory.value||'Outros',description:fDescription.value||'Movimentação',value:Number(fValue.value)};upsert(db.movements,x)}
-  if(type==='event'){const x={id:id||Date.now(),date:fDate.value,time:fTime.value,name:fName.value,client:fClient.value,place:fPlace.value,value:Number(fValue.value),received:Number(fReceived.value||0)};upsert(db.events,x)}
-  if(type==='bill'){const old=id?db.bills.find(x=>x.id===id):null;const x={id:id||Date.now(),name:fName.value,due:fDue.value,value:Number(fValue.value),paid:old?old.paid:false};upsert(db.bills,x);const auto=db.movements.find(m=>m.billId===x.id);if(auto){auto.description=x.name;auto.value=x.value}}
-  if(type==='card'){const x={id:id||Date.now(),name:fName.value,description:fDescription.value,total:Number(fTotal.value),parts:Number(fParts.value),current:Number(fCurrent.value)};upsert(db.cards,x)}
-  if(type==='goal'){const x={id:id||Date.now(),name:fName.value,target:Number(fTarget.value),saved:Number(fSaved.value||0),due:fDue.value,note:fNote.value};upsert(db.goals,x)}
-  if(type==='investment'){
-    if(id){const old=db.investments.find(x=>x.id===id);reverseInvestment(old)}
-    const x={id:id||Date.now(),date:fDate.value,type:fInvType.value,value:Number(fValue.value),note:fNote.value};applyInvestment(x);upsert(db.investments,x)
-  }
-  genericDialog.close();save()
-}
-function upsert(arr,obj){const i=arr.findIndex(x=>x.id===obj.id);if(i>=0)arr[i]=obj;else arr.push(obj)}
-function applyInvestment(x){if(x.type==='Saldo atual')db.config.investimentos=x.value;else if(x.type==='Aporte'||x.type==='Rendimento')db.config.investimentos+=x.value;else db.config.investimentos-=x.value}
-function reverseInvestment(x){if(!x)return;if(x.type==='Aporte'||x.type==='Rendimento')db.config.investimentos-=x.value;else if(x.type==='Resgate')db.config.investimentos+=x.value}
-
-function removeItem(type,id){
-  if(!confirm('Excluir este item?'))return;
-  if(type==='movement')db.movements=db.movements.filter(x=>x.id!==id);
-  if(type==='event')db.events=db.events.filter(x=>x.id!==id);
-  if(type==='bill'){db.bills=db.bills.filter(x=>x.id!==id);db.movements=db.movements.filter(x=>x.billId!==id)}
-  if(type==='card')db.cards=db.cards.filter(x=>x.id!==id);
-  if(type==='goal')db.goals=db.goals.filter(x=>x.id!==id);
-  if(type==='investment'){const x=db.investments.find(y=>y.id===id);reverseInvestment(x);db.investments=db.investments.filter(y=>y.id!==id)}
-  save()
-}
-function toggleBill(id){
-  const b=db.bills.find(x=>x.id===id);
-  if(!b.paid){
-    b.paid=true;
-    db.movements.push({id:Date.now(),billId:b.id,date:new Date().toISOString().slice(0,10),type:'Despesa',category:'Contas',description:b.name,value:b.value});
-  }else{
-    b.paid=false;
-    db.movements=db.movements.filter(x=>x.billId!==b.id);
-  }
-  save()
-}
-
-function parseMoney(text){const m=text.replace(/\./g,'').replace(',','.').match(/(\d+(?:\.\d{1,2})?)/);return m?Number(m[1]):0}
-function category(text){const t=text.toLowerCase();if(t.includes('combust')||t.includes('gasolina'))return'Combustível';if(t.includes('pedágio'))return'Pedágio';if(t.includes('lanche')||t.includes('almoço')||t.includes('jantar'))return'Alimentação';if(t.includes('mercado'))return'Mercado';if(t.includes('festa')||t.includes('dj'))return'DJ';return'Outros'}
-function processAssistant(textOverride){
-  const text=(textOverride||assistantText.value||'').trim(),value=parseMoney(text),lower=text.toLowerCase();
-  if(!value){assistantMessage.textContent='Não identifiquei o valor.';assistantMessage.style.color='var(--red)';return}
-  const type=(lower.includes('recebi')||lower.includes('ganhei')||lower.includes('entrou'))?'Receita':(lower.includes('gastei')||lower.includes('paguei')||lower.includes('comprei'))?'Despesa':null;
-  if(!type){assistantMessage.textContent='Diga se gastou ou recebeu.';assistantMessage.style.color='var(--red)';return}
-  db.movements.push({id:Date.now(),date:new Date().toISOString().slice(0,10),type,category:category(text),description:text,value});
-  assistantMessage.textContent=`✓ ${type} de ${money(value)} registrada.`;assistantMessage.style.color='var(--green)';assistantText.value='';save()
-}
-function startVoice(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){assistantMessage.textContent='Use o microfone do teclado do iPhone para ditar no campo de texto.';assistantMessage.style.color='var(--gold)';assistantText.focus();return}
-  const r=new SR();r.lang='pt-BR';r.onresult=e=>{const t=e.results[0][0].transcript;assistantText.value=t;processAssistant(t)};r.onerror=()=>{assistantMessage.textContent='Não consegui ouvir. Tente pelo campo de texto.';assistantMessage.style.color='var(--red)'};r.start()
-}
-render();
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
