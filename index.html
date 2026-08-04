@@ -196,8 +196,8 @@
 
       <section id="financeiro" class="page">
         <div class="page-head">
-          <div><h2>Financeiro</h2><p>Receitas e despesas em um só lugar.</p></div>
-          <button class="primary" onclick="openMov()">+ Nova movimentação</button>
+          <div><h2 id="financeTitle">Financeiro</h2><p id="financeSubtitle">Receitas e despesas em um só lugar.</p></div>
+          <button class="primary" id="financeAddBtn" onclick="openMov(financeFilter==='Todos'?null:financeFilter)">+ Nova movimentação</button>
         </div>
         <div class="filter-row">
           <button class="filter active" data-filter="Todos" onclick="setFilter('Todos')">Todos</button>

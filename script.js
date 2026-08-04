@@ -331,7 +331,14 @@ function startVoice(){
 function activateTab(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'})}
 function goTab(id){activateTab(id)}
 function goFinance(type){activateTab('financeiro');setFilter(type)}
-function setFilter(type){financeFilter=type;document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===type));render()}
+function setFilter(type){
+  financeFilter=type;
+  document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===type));
+  const titles={Todos:['Financeiro','Receitas e despesas em um só lugar.','+ Nova movimentação'],Receita:['Receitas','Tudo que você recebeu.','+ Nova receita'],Despesa:['Despesas','Tudo que você gastou.','+ Nova despesa']};
+  const [title,subtitle,btn]=titles[type]||titles.Todos;
+  financeTitle.textContent=title;financeSubtitle.textContent=subtitle;financeAddBtn.textContent=btn;
+  render();
+}
 function openMov(type){movDate.value=new Date().toISOString().slice(0,10);if(type)movType.value=type;movDialog.showModal()}
 function saveMov(){const valor=Number(movValue.value);if(!valor)return alert('Informe o valor.');db.mov.push({id:Date.now(),data:movDate.value,tipo:movType.value,cat:movCat.value||'Outros',desc:movDesc.value||movCat.value||'Movimentação',valor});movDialog.close();movValue.value='';movDesc.value='';persist()}
 function openEvent(){eventDate.value=new Date().toISOString().slice(0,10);eventDialog.showModal()}
