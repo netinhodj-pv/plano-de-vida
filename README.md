@@ -17,3 +17,10 @@ Versão responsiva para desktop e iPhone.
 3. Aguarde o GitHub Pages atualizar.
 4. No navegador, use Ctrl + F5 para forçar a atualização.
 5. No iPhone, feche e abra novamente o app instalado.
+
+
+## Versão 3.1
+- Correções de responsividade no iPhone
+- Cards sem cortes
+- Menu inferior ajustado
+- Textos e valores reorganizados em telas menores
