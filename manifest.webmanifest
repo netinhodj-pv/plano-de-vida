@@ -1,11 +1,8 @@
 {
   "name": "Plano de Vida",
   "short_name": "Plano de Vida",
-  "description": "Organize seu presente. Construa seu futuro.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "./index.html?v=5",
   "display": "standalone",
-  "background_color": "#05070b",
-  "theme_color": "#05070b",
-  "icons": []
+  "background_color": "#071018",
+  "theme_color": "#071018"
 }
