@@ -183,10 +183,25 @@
       </section>
 
       <section id="investimentos" class="page">
-        <div class="page-head"><div><h2>Investimentos</h2><p>Acompanhe sua reserva e o futuro comprometido.</p></div></div>
+        <div class="page-head">
+          <div><h2>Investimentos</h2><p>Acompanhe sua reserva, aportes e rendimentos.</p></div>
+          <button class="primary" onclick="openInvestment()">Editar investimento</button>
+        </div>
         <div class="panel-grid">
-          <div class="panel-card"><small>Mercado Pago — Cofrinho</small><strong id="investBig"></strong></div>
+          <div class="panel-card editable-panel">
+            <div class="section-head">
+              <div>
+                <small>Mercado Pago — Cofrinho</small>
+                <strong id="investBig"></strong>
+              </div>
+              <button class="icon-action" onclick="openInvestment()" title="Editar investimento">✏️</button>
+            </div>
+          </div>
           <div class="panel-card"><small>Futuro comprometido</small><strong id="futureBig"></strong></div>
+        </div>
+        <div class="panel-card investment-history-card">
+          <div class="section-head"><h3>Histórico do investimento</h3></div>
+          <div id="investmentHistory" class="stack"></div>
         </div>
       </section>
 
@@ -308,6 +323,41 @@
       </div>
       <label>Parcela atual</label><input id="cardCurrent" type="number" value="1" min="1">
       <div class="modal-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" class="primary" onclick="saveCard()">Salvar</button></div>
+    </form>
+  </dialog>
+
+
+  <dialog id="investmentDialog">
+    <form method="dialog" class="modal">
+      <h3>Atualizar investimento</h3>
+      <label>Tipo de atualização</label>
+      <select id="investmentType">
+        <option value="Saldo atual">Informar saldo atual</option>
+        <option value="Aporte">Aporte</option>
+        <option value="Rendimento">Rendimento</option>
+        <option value="Resgate">Resgate</option>
+      </select>
+      <label>Valor</label>
+      <input id="investmentValue" type="number" step="0.01">
+      <label>Data</label>
+      <input id="investmentDate" type="date">
+      <label>Observação</label>
+      <input id="investmentNote" placeholder="Ex.: rendimento do cofrinho">
+      <div class="modal-actions">
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button type="button" class="primary" onclick="saveInvestment()">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="editDialog">
+    <form method="dialog" class="modal">
+      <h3 id="editTitle">Editar item</h3>
+      <div id="editFields"></div>
+      <div class="modal-actions">
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button type="button" class="primary" onclick="saveEdit()">Salvar alterações</button>
+      </div>
     </form>
   </dialog>
 

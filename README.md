@@ -24,3 +24,13 @@ Versão responsiva para desktop e iPhone.
 - Cards sem cortes
 - Menu inferior ajustado
 - Textos e valores reorganizados em telas menores
+
+## Versão 3.2
+- Todas as movimentações podem ser editadas e excluídas
+- Eventos podem ser editados e excluídos
+- Contas podem ser editadas e excluídas
+- Compras no cartão podem ser editadas e excluídas
+- Investimentos podem receber aporte, rendimento, resgate ou saldo atualizado
+- Histórico de alterações do investimento
+- Contas pendentes não diminuem o saldo até serem marcadas como pagas
+- Ao reabrir uma conta paga, a despesa automática é removida

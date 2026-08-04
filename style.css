@@ -338,3 +338,63 @@ img, svg, video, canvas {
     font-size: 13px;
   }
 }
+
+
+/* ===== EDIÇÃO COMPLETA V3.2 ===== */
+.item-actions{
+  display:flex;
+  gap:6px;
+  justify-content:flex-end;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+.item-actions button,
+.icon-action{
+  border:1px solid #2d3d50;
+  background:#111a25;
+  color:#dce3ec;
+  border-radius:10px;
+  padding:7px 9px;
+  font-size:12px;
+}
+.item-actions button:hover,
+.icon-action:hover{
+  border-color:#6b8bb3;
+  background:#172334;
+}
+.item-actions .delete{
+  border-color:#5a252b;
+  color:#ff7b84;
+  background:#241014;
+}
+.item-actions .delete:hover{
+  background:#35151b;
+}
+.editable-panel{
+  position:relative;
+}
+.investment-history-card{
+  margin-top:14px;
+}
+.investment-entry{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  background:#0e151f;
+  border:1px solid #1e2b39;
+  border-radius:14px;
+  padding:12px;
+}
+.investment-entry .amount-positive{color:var(--green)}
+.investment-entry .amount-negative{color:var(--red)}
+.investment-entry .amount-neutral{color:var(--blue)}
+
+@media(max-width:560px){
+  .item-actions{
+    justify-content:flex-start;
+  }
+  .investment-entry{
+    flex-direction:column;
+  }
+}
