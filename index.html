@@ -175,11 +175,11 @@
       </section>
 
       <section id="metas" class="page">
-        <div class="page-head"><div><h2>Metas</h2><p>Transforme objetivos em planos.</p></div></div>
-        <div class="panel-card">
-          <h3>Meta financeira do mês</h3>
-          <div class="goal-big"><strong id="goalBig"></strong><div class="progress"><span id="goalBarBig"></span></div></div>
+        <div class="page-head">
+          <div><h2>Metas</h2><p>Transforme objetivos em planos reais.</p></div>
+          <button class="primary" onclick="openGoal()">+ Nova meta</button>
         </div>
+        <div id="goalList" class="goal-list"></div>
       </section>
 
       <section id="investimentos" class="page">
@@ -206,12 +206,22 @@
       </section>
 
       <section id="assistente" class="page">
-        <div class="page-head"><div><h2>Assistente de Voz</h2><p>Fale naturalmente para registrar seus dados.</p></div></div>
+        <div class="page-head">
+          <div><h2>Assistente</h2><p>Registre receitas e despesas falando ou digitando.</p></div>
+        </div>
+
         <div class="voice-card">
           <div class="wave">▁▃▆▂▇▅▂▆▃▁</div>
-          <button class="voice-button" onclick="fakeVoice()">◉</button>
-          <strong>Fale comigo...</strong>
+          <button class="voice-button" id="voiceButton" onclick="startVoice()">◉</button>
+          <strong id="voiceTitle">Toque para falar</strong>
           <p id="voiceStatus">Exemplo: “Gastei 30 reais no mercado.”</p>
+
+          <div class="voice-input-wrap">
+            <input id="assistantText" placeholder="Digite: Recebi 350 do Peter">
+            <button class="primary" onclick="processAssistantText()">Registrar</button>
+          </div>
+
+          <div id="assistantPreview" class="assistant-preview"></div>
         </div>
       </section>
 
@@ -246,9 +256,7 @@
 
       <section class="mini-card">
         <div class="section-head"><h3>◎ Metas e Objetivos</h3><button onclick="goTab('metas')">Ver todas</button></div>
-        <strong>Comprar novo equipamento</strong>
-        <small>R$ 0 / R$ 5.000,00</small>
-        <div class="progress"><span style="width:0%"></span></div>
+        <div id="rightGoalSummary"></div>
       </section>
 
       <section class="mini-card">
@@ -326,6 +334,27 @@
     </form>
   </dialog>
 
+
+
+  <dialog id="goalDialog">
+    <form method="dialog" class="modal">
+      <h3 id="goalDialogTitle">Nova meta</h3>
+      <label>Nome da meta</label>
+      <input id="goalName" placeholder="Ex.: Comprar câmera nova">
+      <label>Valor da meta</label>
+      <input id="goalTarget" type="number" step="0.01">
+      <label>Valor já guardado</label>
+      <input id="goalSaved" type="number" step="0.01" value="0">
+      <label>Prazo</label>
+      <input id="goalDate" type="date">
+      <label>Observação</label>
+      <input id="goalNote" placeholder="Opcional">
+      <div class="modal-actions">
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button type="button" class="primary" onclick="saveGoal()">Salvar</button>
+      </div>
+    </form>
+  </dialog>
 
   <dialog id="investmentDialog">
     <form method="dialog" class="modal">

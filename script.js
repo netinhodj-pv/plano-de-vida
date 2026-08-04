@@ -18,7 +18,8 @@ const seed={
     {id:14,data:'2026-08-09',hora:'12:30',nome:'Festa do Dia dos Pais',cliente:'Peter',local:'Clube Adolf Block',valor:350,recebido:0,status:'Confirmado'}
   ],
   bills:[{id:21,nome:'Light (Luz)',data:'2026-08-13',valor:625.18,pago:false}],
-  investmentHistory:[{id:31,data:'2026-08-04',tipo:'Saldo atual',valor:13627.38,observacao:'Valor inicial informado'}]
+  investmentHistory:[{id:31,data:'2026-08-04',tipo:'Saldo atual',valor:13627.38,observacao:'Valor inicial informado'}],
+  goals:[{id:41,nome:'Comprar novo equipamento',meta:5000,guardado:0,prazo:'2026-12-31',observacao:''}]
 };
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||seed;
 if(!db.investmentHistory) db.investmentHistory=[];
@@ -26,14 +27,40 @@ if(!db.cards) db.cards=[];
 if(!db.bills) db.bills=[];
 if(!db.events) db.events=[];
 if(!db.mov) db.mov=[];
+if(!db.goals) db.goals=[];
 let editContext={type:null,id:null};
 let financeFilter='Todos';
+
+function reconcilePendingBills(){
+  if(!Array.isArray(db.bills) || !Array.isArray(db.mov)) return;
+
+  const unpaidBills=db.bills.filter(b=>!b.pago);
+
+  db.mov=db.mov.filter(m=>{
+    // New-format automatic expense linked to an unpaid bill.
+    if(m.billId && unpaidBills.some(b=>b.id===m.billId)) return false;
+
+    // Legacy versions created the bill expense without billId.
+    const legacyMatch=unpaidBills.some(b=>
+      m.tipo==='Despesa' &&
+      Number(m.valor)===Number(b.valor) &&
+      String(m.desc||'').trim().toLowerCase()===String(b.nome||'').trim().toLowerCase()
+    );
+
+    return !legacyMatch;
+  });
+}
+reconcilePendingBills();
+
 const brl=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const fd=d=>new Date(d+'T12:00:00').toLocaleDateString('pt-BR');
-function persist(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function persist(){reconcilePendingBills();localStorage.setItem(KEY,JSON.stringify(db));render()}
 function calc(){
   const receitas=db.mov.filter(x=>x.tipo==='Receita').reduce((s,x)=>s+x.valor,0);
-  const despesas=db.mov.filter(x=>x.tipo==='Despesa').reduce((s,x)=>s+x.valor,0);
+  const unpaidBillIds=new Set(db.bills.filter(b=>!b.pago).map(b=>b.id));
+  const despesas=db.mov
+    .filter(x=>x.tipo==='Despesa' && !(x.billId && unpaidBillIds.has(x.billId)))
+    .reduce((s,x)=>s+x.valor,0);
   const receber=db.events.reduce((s,x)=>s+Math.max(0,x.valor-x.recebido),0);
   const futuro=db.cards.reduce((s,x)=>s+(x.total/x.partes)*Math.max(0,x.partes-x.atual+1),0);
   const contas=db.bills.filter(x=>!x.pago).reduce((s,x)=>s+x.valor,0);
@@ -61,6 +88,12 @@ function render(){
   homeBills.innerHTML=db.bills.filter(b=>!b.pago).slice(0,2).map(billMini).join('')||'<div class="meta">Nenhuma conta próxima.</div>';
   billList.innerHTML=db.bills.map(billFull).join('')||'<div class="meta">Nenhuma conta.</div>';
   cardList.innerHTML=db.cards.map(cardFull).join('')||'<div class="meta">Nenhuma compra parcelada.</div>';
+  goalList.innerHTML=db.goals.map(goalFull).join('')||'<div class="meta">Nenhuma meta cadastrada.</div>';
+  const firstGoal=db.goals[0];
+  rightGoalSummary.innerHTML=firstGoal?(()=>{
+    const pct=Math.max(0,Math.min(100,Math.round((Number(firstGoal.guardado||0)/Math.max(1,Number(firstGoal.meta||1)))*100)));
+    return `<strong>${firstGoal.nome}</strong><small>${brl(firstGoal.guardado)} / ${brl(firstGoal.meta)}</small><div class="progress"><span style="width:${pct}%"></span></div>`;
+  })():'<div class="meta">Nenhuma meta.</div>';
 
   const mov=[...db.mov].sort((a,b)=>b.data.localeCompare(a.data)||b.id-a.id);
   const filtered=financeFilter==='Todos'?mov:mov.filter(m=>m.tipo===financeFilter);
@@ -137,6 +170,153 @@ function investmentEntry(i){
     </div>
   </div>`
 }
+
+function goalFull(g){
+  const pct=Math.max(0,Math.min(100,Math.round((Number(g.guardado||0)/Math.max(1,Number(g.meta||1)))*100)));
+  return `<div class="goal-item">
+    <h3>${g.nome}</h3>
+    <div class="meta">${g.prazo?`Prazo: ${fd(g.prazo)}`:'Sem prazo'}${g.observacao?' · '+g.observacao:''}</div>
+    <div class="goal-values">
+      <span>${brl(g.guardado)} de ${brl(g.meta)}</span>
+      <span class="goal-percent">${pct}%</span>
+    </div>
+    <div class="progress"><span style="width:${pct}%"></span></div>
+    <div class="goal-actions">
+      <button onclick="openGoal(${g.id})">✏️ Editar</button>
+      <button class="delete" onclick="deleteGoal(${g.id})">🗑 Excluir</button>
+    </div>
+  </div>`;
+}
+
+let editingGoalId=null;
+function openGoal(id=null){
+  editingGoalId=id;
+  goalDialogTitle.textContent=id?'Editar meta':'Nova meta';
+  if(id){
+    const g=db.goals.find(x=>x.id===id);
+    if(!g) return;
+    goalName.value=g.nome||'';
+    goalTarget.value=g.meta||0;
+    goalSaved.value=g.guardado||0;
+    goalDate.value=g.prazo||'';
+    goalNote.value=g.observacao||'';
+  }else{
+    goalName.value='';
+    goalTarget.value='';
+    goalSaved.value=0;
+    goalDate.value='';
+    goalNote.value='';
+  }
+  goalDialog.showModal();
+}
+function saveGoal(){
+  const nome=goalName.value.trim();
+  const meta=Number(goalTarget.value);
+  const guardado=Number(goalSaved.value||0);
+  if(!nome||!meta) return alert('Informe o nome e o valor da meta.');
+  if(editingGoalId){
+    const g=db.goals.find(x=>x.id===editingGoalId);
+    g.nome=nome;g.meta=meta;g.guardado=guardado;g.prazo=goalDate.value;g.observacao=goalNote.value;
+  }else{
+    db.goals.push({id:Date.now(),nome,meta,guardado,prazo:goalDate.value,observacao:goalNote.value});
+  }
+  goalDialog.close();
+  persist();
+}
+function deleteGoal(id){
+  if(!confirm('Excluir esta meta?')) return;
+  db.goals=db.goals.filter(x=>x.id!==id);
+  persist();
+}
+
+function parseMoney(text){
+  const normalized=text.replace(/\./g,'').replace(',','.');
+  const match=normalized.match(/(\d+(?:\.\d{1,2})?)/);
+  return match?Number(match[1]):0;
+}
+function inferCategory(text){
+  const t=text.toLowerCase();
+  if(t.includes('combust')||t.includes('gasolina')||t.includes('álcool')) return 'Combustível';
+  if(t.includes('pedágio')) return 'Pedágio';
+  if(t.includes('lanche')||t.includes('comida')||t.includes('almoço')||t.includes('jantar')||t.includes('ifood')) return 'Alimentação';
+  if(t.includes('mercado')) return 'Mercado';
+  if(t.includes('luz')||t.includes('light')) return 'Casa';
+  if(t.includes('festa')||t.includes('dj')) return 'DJ';
+  if(t.includes('filmagem')||t.includes('vídeo')) return 'Filmagem';
+  return 'Outros';
+}
+function parseAssistantCommand(text){
+  const original=text.trim();
+  const lower=original.toLowerCase();
+  const valor=parseMoney(original);
+  if(!valor) return {ok:false,message:'Não consegui identificar o valor.'};
+
+  let tipo=null;
+  if(lower.includes('gastei')||lower.includes('paguei')||lower.includes('comprei')) tipo='Despesa';
+  if(lower.includes('recebi')||lower.includes('entrou')||lower.includes('ganhei')) tipo='Receita';
+  if(!tipo) return {ok:false,message:'Diga se você gastou ou recebeu.'};
+
+  const categoria=inferCategory(lower);
+  const desc=original.charAt(0).toUpperCase()+original.slice(1);
+  return {ok:true,tipo,valor,categoria,desc};
+}
+function processAssistantText(textOverride=null){
+  const text=(textOverride||assistantText.value||'').trim();
+  if(!text){
+    assistantPreview.className='assistant-preview error';
+    assistantPreview.textContent='Digite ou fale uma movimentação.';
+    return;
+  }
+  const parsed=parseAssistantCommand(text);
+  if(!parsed.ok){
+    assistantPreview.className='assistant-preview error';
+    assistantPreview.textContent=parsed.message;
+    return;
+  }
+  db.mov.push({
+    id:Date.now(),
+    data:new Date().toISOString().slice(0,10),
+    tipo:parsed.tipo,
+    cat:parsed.categoria,
+    desc:parsed.desc,
+    valor:parsed.valor
+  });
+  assistantPreview.className='assistant-preview success';
+  assistantPreview.textContent=`✓ ${parsed.tipo} de ${brl(parsed.valor)} registrada em ${parsed.categoria}.`;
+  assistantText.value='';
+  persist();
+}
+function startVoice(){
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    voiceTitle.textContent='Voz indisponível neste navegador';
+    voiceStatus.textContent='Use o campo de texto abaixo ou o ditado do teclado do iPhone.';
+    assistantText.focus();
+    return;
+  }
+  const recognition=new SpeechRecognition();
+  recognition.lang='pt-BR';
+  recognition.interimResults=false;
+  recognition.maxAlternatives=1;
+  voiceTitle.textContent='Ouvindo...';
+  voiceStatus.textContent='Fale uma movimentação.';
+  recognition.onresult=(event)=>{
+    const text=event.results[0][0].transcript;
+    assistantText.value=text;
+    voiceTitle.textContent='Entendi';
+    voiceStatus.textContent=text;
+    processAssistantText(text);
+  };
+  recognition.onerror=()=>{
+    voiceTitle.textContent='Não consegui ouvir';
+    voiceStatus.textContent='Tente novamente ou use o campo de texto.';
+  };
+  recognition.onend=()=>{
+    if(voiceTitle.textContent==='Ouvindo...') voiceTitle.textContent='Toque para falar';
+  };
+  recognition.start();
+}
+
 function activateTab(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'})}
 function goTab(id){activateTab(id)}
 function goFinance(type){activateTab('financeiro');setFilter(type)}
@@ -314,7 +494,7 @@ function saveEdit(){
   persist();
 }
 function openTransfer(){alert('Transferência entra na próxima atualização.')}
-function fakeVoice(){voiceStatus.textContent='✓ Registrado! O assistente de voz será conectado à IA em uma próxima versão.'}
+
 document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>activateTab(btn.dataset.tab)));
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
 render();

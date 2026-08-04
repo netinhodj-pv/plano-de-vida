@@ -34,3 +34,16 @@ Versão responsiva para desktop e iPhone.
 - Histórico de alterações do investimento
 - Contas pendentes não diminuem o saldo até serem marcadas como pagas
 - Ao reabrir uma conta paga, a despesa automática é removida
+
+## Versão 3.3
+- Corrige despesas antigas criadas por contas ainda pendentes
+- Conta a vencer não altera o saldo atual
+- Migração automática remove descontos indevidos das versões anteriores
+- Despesa só entra no saldo quando a conta é marcada como paga
+
+## Versão 4
+- Metas podem ser criadas, editadas e excluídas
+- Assistente registra receitas e despesas por texto
+- Reconhecimento de voz quando o navegador oferece suporte
+- Alternativa de digitação no iPhone
+- Interpretação básica de valor e categoria
