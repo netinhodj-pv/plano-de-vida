@@ -30,6 +30,17 @@ if(!db.mov) db.mov=[];
 if(!db.goals) db.goals=[];
 let editContext={type:null,id:null};
 let financeFilter='Todos';
+let balanceHidden=false;
+function toggleBalance(){
+  balanceHidden=!balanceHidden;
+  eyeIcon.innerHTML=`<use href="${balanceHidden?'#ic-eye-off':'#ic-eye'}"/>`;
+  render();
+}
+function updateGreeting(){
+  const h=new Date().getHours();
+  const saud=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  greeting.textContent=`${saud}, Neto! 👋`;
+}
 
 function reconcilePendingBills(){
   if(!Array.isArray(db.bills) || !Array.isArray(db.mov)) return;
@@ -71,12 +82,12 @@ function calc(){
 }
 function render(){
   const t=calc();
-  saldo.textContent=brl(t.saldo);investimentos.textContent=brl(db.config.investimentos);patrimonio.textContent=brl(t.patrimonio);
+  saldo.textContent=balanceHidden?'R$ ••••••':brl(t.saldo);investimentos.textContent=brl(db.config.investimentos);patrimonio.textContent=brl(t.patrimonio);
   receitas.textContent=brl(t.receitas);despesas.textContent=brl(t.despesas);aReceber.textContent=brl(t.receber);futuroComprometido.textContent=brl(t.futuro);
   rightReceitas.textContent=brl(t.receitas);rightDespesas.textContent=brl(t.despesas);rightInvest.textContent=brl(db.config.investimentos);
   score.textContent=t.score;scoreLabel.textContent=t.score>=75?'Situação confortável':t.score>=50?'Atenção':'Situação apertada';
-  goalText.textContent=`${brl(t.receitas)} de ${brl(db.config.metaMensal)}`;goalBig.textContent=goalText.textContent;
-  goalBar.style.width=goalBarBig.style.width=Math.min(100,t.receitas/db.config.metaMensal*100)+'%';
+  goalText.textContent=`${brl(t.receitas)} de ${brl(db.config.metaMensal)}`;
+  goalBar.style.width=Math.min(100,t.receitas/db.config.metaMensal*100)+'%';
   investBig.textContent=brl(db.config.investimentos);futureBig.textContent=brl(t.futuro);
   investmentHistory.innerHTML=[...db.investmentHistory].sort((a,b)=>b.data.localeCompare(a.data)||b.id-a.id).map(investmentEntry).join('')||'<div class="meta">Nenhuma atualização registrada.</div>';
 
@@ -497,4 +508,5 @@ function openTransfer(){alert('Transferência entra na próxima atualização.')
 
 document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>activateTab(btn.dataset.tab)));
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+updateGreeting();
 render();
